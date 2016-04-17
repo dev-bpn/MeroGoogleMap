@@ -1,8 +1,20 @@
 package com.bipin.android.googlemap;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
+import android.util.Log;
+import android.view.View;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -11,7 +23,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private int REQUEST_PLACE_PICKER = 1;
+    private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private String TAG = "MAP_TAG";
+    private String CLICK_TAG;
 
 
     @Override
@@ -122,10 +136,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+
     // Autocomplete Widget (intent, fullscreen mode)
-/**
     // PLACES_API_ACCESS_NOT_CONFIGURED ERROR due to disabled GOOGLE PLACE API FOR ANDROID
     public void findPlace(View view){
+
+        CLICK_TAG = "1";
+
         AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT)
                 .build();
@@ -143,29 +160,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(this, data);
-                Log.i(TAG, "Place: " + place.getName());
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-                // TODO: Handle the error.
-                Log.i(TAG, status.getStatusMessage());
+    public  void findPlace2(View view){
 
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
-        }
+
+
     }
-*/
 
 
 
+ public void findPlace3(View view){
 
-/**    public void findPlace(View view){
-
+     CLICK_TAG = "3";
         // Construct an intent for the place picker
         try {
             PlacePicker.IntentBuilder intentBuilder =
@@ -187,24 +192,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode,
                                     int resultCode, Intent data) {
 
-        if (requestCode == REQUEST_PLACE_PICKER
-                && resultCode == Activity.RESULT_OK) {
+        if(CLICK_TAG.equals("1")){
 
-            // The user has selected a place. Extract the name and address.
-            final Place place = PlacePicker.getPlace(data, this);
+            if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+                if (resultCode == RESULT_OK) {
+                    Place place = PlaceAutocomplete.getPlace(this, data);
+                    Log.i(TAG, "Place: " + place.getName());
+                } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(this, data);
+                    // TODO: Handle the error.
+                    Log.i(TAG, status.getStatusMessage());
 
-            final CharSequence name = place.getName();
-            final CharSequence address = place.getAddress();
-            String attributions = PlacePicker.getAttributions(data);
-            if (attributions == null) {
-                attributions = "";
+                } else if (resultCode == RESULT_CANCELED) {
+                    // The user canceled the operation.
+                }
             }
 
-            Log.i(TAG, name + " " + address + " " + Html.fromHtml(attributions));
+        }else if(CLICK_TAG.equals("3")){
 
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == REQUEST_PLACE_PICKER
+                    && resultCode == Activity.RESULT_OK) {
+
+                // The user has selected a place. Extract the name and address.
+                final Place place = PlacePicker.getPlace(data, this);
+
+                final CharSequence name = place.getName();
+                final CharSequence address = place.getAddress();
+                String attributions = PlacePicker.getAttributions(data);
+                if (attributions == null) {
+                    attributions = "";
+                }
+
+                Log.i(TAG, name + " " + address + " " + Html.fromHtml(attributions));
+
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+
         }
-    }*/
+
+    }
 
 }
