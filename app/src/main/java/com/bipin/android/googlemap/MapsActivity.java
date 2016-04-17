@@ -1,21 +1,18 @@
 package com.bipin.android.googlemap;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private String TAG = "MAP_TAG";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +40,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Hello Map
 
-         // Add a marker in Sydney and move the camera
+        /** // Add a marker in Sydney and move the camera
          LatLng sydney = new LatLng(-34, 151);
          mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
          mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
+         */
 
 
         // Change the Map Type
@@ -123,4 +120,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
          * **/
 
     }
+
+
+    // Autocomplete Widget (intent, fullscreen mode)
+/**
+    // PLACES_API_ACCESS_NOT_CONFIGURED ERROR due to disabled GOOGLE PLACE API FOR ANDROID
+    public void findPlace(View view){
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT)
+                .build();
+        try {
+
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .setFilter(typeFilter)
+                            .build(this);
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            // TODO: Handle the error.
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                Log.i(TAG, "Place: " + place.getName());
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(this, data);
+                // TODO: Handle the error.
+                Log.i(TAG, status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+    }
+*/
+
+
+    
 }
